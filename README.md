@@ -1,6 +1,6 @@
 # DocMind — AI-Powered Company Knowledge Assistant
 
-DocMind is a production-quality full-stack AI company knowledge assistant. Users can upload company documentation in **PDF**, **Word (DOCX)**, **Markdown (MD)**, and **Plain Text (TXT)** formats. The application parses the files, segments them semantically, embeds chunks using Google Gemini's `text-embedding-004` model (768 dimensions), indexes them in a PostgreSQL database using `pgvector`, and uses Retrieval-Augmented Generation (RAG) to provide grounded answers via `gemini-1.5-flash` with source citations.
+DocMind is a production-quality full-stack AI company knowledge assistant. Users can upload company documentation in **PDF**, **Word (DOCX)**, **Markdown (MD)**, and **Plain Text (TXT)** formats. The application parses the files, segments them semantically, embeds chunks using Google Gemini's `text-embedding-004` model (768 dimensions), indexes them in a PostgreSQL database using `pgvector`, and uses Retrieval-Augmented Generation (RAG) to provide grounded answers via `gemini-3.5-flash` with source citations.
 
 ---
 
@@ -45,7 +45,7 @@ sequenceDiagram
     API->>DB: pgvector cosine similarity search (topK = 5)
     DB-->>API: Ranked top 5 chunks + parent document metadata
     API->>API: buildRagContext (format snippets with source names)
-    API->>Gemini: Chat completion (gemini-1.5-flash) with context + strict system instructions
+    API->>Gemini: Chat completion (gemini-3.5-flash) with context + strict system instructions
     Gemini-->>API: Grounded text answer
     API-->>User: ChatResponse (answer + source citations list)
 ```
@@ -186,7 +186,7 @@ An **HNSW Index** is created on the `embedding` vector column using cosine simil
    ```env
    DATABASE_URL="postgresql://postgres:postgres@127.0.0.1:5433/docmind?schema=public"
    GEMINI_API_KEY="your-gemini-api-key"
-   GEMINI_CHAT_MODEL="gemini-1.5-flash"
+   GEMINI_CHAT_MODEL="gemini-3.5-flash"
    GEMINI_EMBEDDING_MODEL="text-embedding-004"
    ```
    *(Note: The database host port is mapped to `5433` to prevent conflicts with any local PostgreSQL instance running natively on the default port `5432`)*
