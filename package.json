@@ -1,0 +1,42 @@
+{
+  "name": "doc-mind",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
+  },
+  "dependencies": {
+    "@google/genai": "^2.17.1",
+    "@google/generative-ai": "^0.24.1",
+    "@hookform/resolvers": "^3.4.2",
+    "@prisma/client": "^5.14.0",
+    "mammoth": "^1.7.2",
+    "moment-timezone": "^0.5.45",
+    "next": "14.2.3",
+    "openai": "^4.47.1",
+    "pdf-parse": "^1.1.1",
+    "primeflex": "^3.3.1",
+    "primeicons": "^7.0.0",
+    "primereact": "^10.6.6",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-hook-form": "^7.51.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "@types/pdf-parse": "^1.1.4",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.3",
+    "prisma": "^5.14.0",
+    "sass": "^1.77.2",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,291 @@
+@import 'primereact/resources/primereact.min.css';
+@import 'primeicons/primeicons.css';
+@import 'primeflex/primeflex.css';
+
+:root {
+  --app-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --header-bg: #ffffff;
+  --sidebar-bg: #ffffff;
+  --subtle-bg: #f1f3f5;
+  --hover-bg: #f3f4f6;
+  --border-color: #e5e7eb;
+  --border-subtle: #f0f2f5;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --text-subtle: #9ca3af;
+  --primary-accent: #6366f1;
+  --primary-accent-light: #eef2ff;
+  --primary-accent-hover: #4f46e5;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+
+  /* Badge colors */
+  --badge-uploading-bg: #eff6ff;
+  --badge-uploading-color: #1d4ed8;
+  --badge-processing-bg: #fffbeb;
+  --badge-processing-color: #b45309;
+  --badge-completed-bg: #ecfdf5;
+  --badge-completed-color: #047857;
+  --badge-failed-bg: #fef2f2;
+  --badge-failed-color: #b91c1c;
+
+  /* Chat Colors */
+  --chat-assistant-bg: #ffffff;
+  --chat-assistant-border: #e5e7eb;
+  --chat-assistant-text: #1f2937;
+  --chat-code-bg: #f3f4f6;
+  --chat-code-text: #4338ca;
+  --chat-source-bg: #f3f4f6;
+}
+
+html.dark,
+[data-theme='dark'] {
+  --app-bg: #0b0f19;
+  --card-bg: #111827;
+  --header-bg: #111827;
+  --sidebar-bg: #111827;
+  --subtle-bg: #1e293b;
+  --hover-bg: #1f2937;
+  --border-color: #1f2937;
+  --border-subtle: #192231;
+  --text-main: #f3f4f6;
+  --text-muted: #9ca3af;
+  --text-subtle: #6b7280;
+  --primary-accent: #818cf8;
+  --primary-accent-light: rgba(129, 140, 248, 0.15);
+  --primary-accent-hover: #a5b4fc;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+
+  /* Dark Badge colors */
+  --badge-uploading-bg: rgba(59, 130, 246, 0.2);
+  --badge-uploading-color: #93c5fd;
+  --badge-processing-bg: rgba(245, 158, 11, 0.2);
+  --badge-processing-color: #fcd34d;
+  --badge-completed-bg: rgba(16, 185, 129, 0.2);
+  --badge-completed-color: #6ee7b7;
+  --badge-failed-bg: rgba(239, 68, 68, 0.2);
+  --badge-failed-color: #fca5a5;
+
+  /* Chat Colors in Dark */
+  --chat-assistant-bg: #1e293b;
+  --chat-assistant-border: #334155;
+  --chat-assistant-text: #f1f5f9;
+  --chat-code-bg: #0f172a;
+  --chat-code-text: #a5b4fc;
+  --chat-source-bg: #0f172a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* 80% Default Zoom Scaling (13px base font for proportional scale) */
+html {
+  font-size: 81.25%; /* Exactly 13px base, achieving 80% density natively */
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  background-color: var(--app-bg);
+  color: var(--text-main);
+  height: 100%;
+  width: 100%;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  overflow: hidden;
+}
+
+/* App Master Layout */
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--app-bg);
+}
+
+.sidebar {
+  width: 260px;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+  z-index: 50;
+}
+
+@media (max-width: 991px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: -260px;
+    width: 260px;
+    box-shadow: var(--shadow-lg);
+  }
+  .sidebar.sidebar-open {
+    left: 0;
+  }
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 40;
+  }
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-width: 0;
+  overflow: hidden;
+  background-color: var(--app-bg);
+}
+
+.content-header {
+  height: 56px;
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  justify-content: space-between;
+  flex-shrink: 0;
+  z-index: 30;
+  position: relative;
+}
+
+.content-body {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  background-color: var(--app-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Reusable DocMind Card */
+.docmind-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.docmind-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Stat & KPI Cards */
+.kpi-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Status Badges */
+.docmind-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 9999px;
+  padding: 0.2rem 0.55rem;
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+.badge-uploading { background-color: var(--badge-uploading-bg); color: var(--badge-uploading-color); }
+.badge-processing { background-color: var(--badge-processing-bg); color: var(--badge-processing-color); }
+.badge-completed { background-color: var(--badge-completed-bg); color: var(--badge-completed-color); }
+.badge-failed { background-color: var(--badge-failed-bg); color: var(--badge-failed-color); }
+
+/* Ingestion Dropzone */
+.upload-dropzone {
+  border: 2px dashed var(--border-color);
+  border-radius: 10px;
+  background-color: var(--card-bg);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.upload-dropzone:hover {
+  border-color: var(--primary-accent);
+  background-color: var(--subtle-bg);
+}
+
+.upload-dropzone.drag-active {
+  border-color: var(--primary-accent);
+  background-color: var(--primary-accent-light);
+  transform: scale(1.005);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.4);
+  border-round: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+}
+
+/* Dark mode utility overrides for primeflex classes */
+html.dark .text-900 { color: #f3f4f6 !important; }
+html.dark .text-800 { color: #e5e7eb !important; }
+html.dark .text-700 { color: #d1d5db !important; }
+html.dark .text-600 { color: #9ca3af !important; }
+html.dark .text-500 { color: #6b7280 !important; }
+html.dark .text-400 { color: #4b5563 !important; }
+
+html.dark .bg-gray-50 { background-color: #1e293b !important; }
+html.dark .bg-gray-100 { background-color: #334155 !important; }
+html.dark .bg-white { background-color: #111827 !important; }
+
+html.dark .border-100 { border-color: #1f2937 !important; }
+html.dark .border-200 { border-color: #334155 !important; }
+html.dark .border-300 { border-color: #475569 !important; }
+
+html.dark .hover\:bg-gray-50:hover { background-color: #1e293b !important; }
+html.dark .hover\:bg-gray-100:hover { background-color: #334155 !important; }
+html.dark .hover\:text-900:hover { color: #ffffff !important; }
