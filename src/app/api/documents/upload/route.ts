@@ -24,7 +24,6 @@ export async function POST(request: Request) {
     const mimeType = file.type;
     const size = file.size;
 
-    // Validate using Zod and our custom extension checker
     const validationResult = documentUploadSchema.safeParse({
       name: filename,
       size,
@@ -43,7 +42,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // 1. Create Document record in UPLOADING state
     const document = await prisma.document.create({
       data: {
         name: filename,
@@ -56,17 +54,14 @@ export async function POST(request: Request) {
 
     createdDocId = document.id;
 
-    // 2. Transition to PROCESSING state
     await prisma.document.update({
       where: { id: createdDocId },
       data: { status: 'PROCESSING' },
     });
 
-    // 3. Read file buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // 4. Extract text content based on file extension
     const extension = filename.substring(filename.lastIndexOf('.')).toLowerCase();
     let extractedDoc: ExtractedDocument;
 
@@ -84,16 +79,12 @@ export async function POST(request: Request) {
       throw new Error('Extracted text content is empty.');
     }
 
-    // 5. Chunk the text
     const chunks = chunkText(extractedDoc.text);
 
-    // 6. Generate embeddings and store chunks
     for (const chunk of chunks) {
-      // Generate the embedding vector
       const embedding = await generateEmbedding(chunk.content);
       const embeddingStr = `[${embedding.join(',')}]`;
 
-      // Create Chunk in database (without embedding first)
       const dbChunk = await prisma.documentChunk.create({
         data: {
           documentId: createdDocId,
@@ -103,7 +94,6 @@ export async function POST(request: Request) {
         },
       });
 
-      // Update the vector column using raw SQL cast
       await prisma.$executeRawUnsafe(
         `UPDATE "DocumentChunk" SET embedding = cast($1 as vector) WHERE id = $2`,
         embeddingStr,
@@ -111,7 +101,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // 7. Transition to COMPLETED state
     const updatedDocument = await prisma.document.update({
       where: { id: createdDocId },
       data: { status: 'COMPLETED' },
@@ -125,15 +114,12 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error('Error in Document Ingestion Pipeline:', error);
 
-    // Rollback / Cleanup if document was created
     if (createdDocId) {
       try {
-        // Delete all chunks created for this document
         await prisma.documentChunk.deleteMany({
           where: { documentId: createdDocId },
         });
 
-        // Set status to FAILED
         await prisma.document.update({
           where: { id: createdDocId },
           data: { status: 'FAILED' },

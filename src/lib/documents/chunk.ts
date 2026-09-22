@@ -14,7 +14,6 @@ export function chunkText(
   const chunks: string[] = [];
   const normalizedText = text.replace(/\r\n/g, '\n');
 
-  // Split content by paragraphs or headings
   const paragraphs = normalizedText.split(/\n\n+/);
   let currentChunk = '';
 
@@ -22,14 +21,12 @@ export function chunkText(
     const para = paragraphs[i].trim();
     if (!para) continue;
 
-    // If a single paragraph is larger than the target chunk size, split it by sentence boundaries
     if (para.length > chunkSize) {
       if (currentChunk) {
         chunks.push(currentChunk);
         currentChunk = '';
       }
 
-      // Split paragraph by sentences (matching .!? followed by space or newline)
       const sentences = para.split(/(?<=[.!?])\s+/);
       let sentenceChunk = '';
 
@@ -38,7 +35,6 @@ export function chunkText(
         if (!trimmedSentence) continue;
 
         if (trimmedSentence.length > chunkSize) {
-          // If a single sentence is larger than the chunk size, split by character blocks
           if (sentenceChunk) {
             chunks.push(sentenceChunk);
             sentenceChunk = '';
@@ -49,7 +45,6 @@ export function chunkText(
             const part = remaining.substring(0, chunkSize);
             chunks.push(part);
             
-            // Advance by chunk size minus overlap
             const advance = chunkSize - overlap;
             if (advance <= 0 || remaining.length <= chunkSize) {
               break;
@@ -57,11 +52,9 @@ export function chunkText(
             remaining = remaining.substring(advance);
           }
         } else {
-          // Normal sentence fits. Can we merge it with current sentenceChunk?
           if ((sentenceChunk ? sentenceChunk + ' ' + trimmedSentence : trimmedSentence).length > chunkSize) {
             if (sentenceChunk) {
               chunks.push(sentenceChunk);
-              // Build new chunk starting with overlap from the end of the previous sentence chunk
               const overlapStart = Math.max(0, sentenceChunk.length - overlap);
               sentenceChunk = sentenceChunk.substring(overlapStart).trim() + ' ' + trimmedSentence;
             } else {
@@ -77,11 +70,9 @@ export function chunkText(
         currentChunk = sentenceChunk;
       }
     } else {
-      // Paragraph fits. Can we merge it with currentChunk?
       if ((currentChunk ? currentChunk + '\n\n' + para : para).length > chunkSize) {
         if (currentChunk) {
           chunks.push(currentChunk);
-          // Apply overlap from end of currentChunk
           const overlapStart = Math.max(0, currentChunk.length - overlap);
           currentChunk = currentChunk.substring(overlapStart).trim() + '\n\n' + para;
         } else {

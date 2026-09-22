@@ -21,7 +21,6 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
 
   return (
     <>
-      {/* Mobile Backdrop */}
       {isOpen && (
         <div
           className="sidebar-backdrop lg:hidden"
@@ -31,7 +30,6 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
       )}
 
       <aside className={`sidebar ${isOpen ? "sidebar-open" : ""}`}>
-        {/* Brand Header */}
         <div className="flex align-items-center justify-content-between p-3 md:p-4 border-bottom-1 border-100">
           <Link
             href="/"
@@ -58,7 +56,6 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
             </div>
           </Link>
 
-          {/* Mobile close button */}
           <button
             type="button"
             className="p-link lg:hidden text-500 hover:text-900 p-2 border-round-md"
@@ -68,7 +65,6 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           </button>
         </div>
 
-        {/* Menu Navigation Items */}
         <div className="flex-1 px-3 py-4 overflow-y-auto">
           <div className="text-xs font-bold text-400 uppercase tracking-wider px-3 mb-2">
             Main Menu
@@ -100,7 +96,6 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           </ul>
         </div>
 
-        {/* Sidebar Footer */}
         <div className="p-3 border-top-1 border-100 bg-gray-50 flex flex-column gap-3">
           <div className="flex align-items-center justify-content-between pt-2 border-top-1 border-100">
             <div className="flex align-items-center gap-2">

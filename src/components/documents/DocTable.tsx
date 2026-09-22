@@ -195,7 +195,6 @@ export default function DocTable({
         value={filteredDocuments}
         paginator
         rows={10}
-        // loading={loading}
         dataKey="id"
         filters={{
           global: { value: globalFilter, matchMode: "contains" },

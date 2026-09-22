@@ -6,8 +6,6 @@ interface MarkdownRendererProps {
   content: string;
 }
 
-/* A robust, client-side line-by-line Markdown renderer.
-   Handles headings, bold/italic markup, bulleted lists, code blocks, and line-breaks. */
 export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
   if (!content) return null;
 

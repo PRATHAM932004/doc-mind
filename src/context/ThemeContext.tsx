@@ -31,7 +31,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const resolved: ResolvedTheme = mode === "system" ? getSystemTheme() : mode;
     setResolvedTheme(resolved);
 
-    // Apply document classes and attributes
     const root = document.documentElement;
     if (resolved === "dark") {
       root.classList.add("dark");
@@ -41,7 +40,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       root.setAttribute("data-theme", "light");
     }
 
-    // Switch PrimeReact theme link
     let themeLink = document.getElementById("primereact-theme") as HTMLLinkElement | null;
     const targetHref = `/themes/lara-${resolved}-indigo/theme.css`;
 
@@ -59,7 +57,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // Read saved preference from localStorage
     try {
       const saved = localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode | null;
       const initialMode: ThemeMode = saved === "light" || saved === "dark" || saved === "system" ? saved : "system";
@@ -71,7 +68,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setMounted(true);
   }, [applyTheme]);
 
-  // System media query change listener
   useEffect(() => {
     if (typeof window === "undefined") return;
 

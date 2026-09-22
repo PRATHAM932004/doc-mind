@@ -25,7 +25,6 @@ export async function GET() {
       },
     });
 
-    // Format output to return a clean flat object structure
     const formattedDocs = documents.map((doc) => ({
       id: doc.id,
       name: doc.name,

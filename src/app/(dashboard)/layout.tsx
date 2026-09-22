@@ -28,14 +28,11 @@ export default function DashboardLayout({
 
   return (
     <div className="app-container">
-      {/* Sidebar Navigation */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      {/* Main Content Area */}
       <div className="main-content">
         <header className="content-header">
           <div className="flex align-items-center gap-3">
-            {/* Hamburger menu button on mobile */}
             <button
               type="button"
               className="p-link lg:hidden text-700 hover:text-900 p-2 border-round-md bg-surface-100 flex align-items-center justify-content-center cursor-pointer"

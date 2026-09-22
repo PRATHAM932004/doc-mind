@@ -23,7 +23,6 @@ export async function DELETE(
       return NextResponse.json({ error: 'Document not found.' }, { status: 404 });
     }
 
-    // Delete document; Prisma cascading rules will purge associated DocumentChunks
     await prisma.document.delete({
       where: { id },
     });

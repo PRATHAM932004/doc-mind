@@ -10,7 +10,6 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    // Validate the incoming request
     const validationResult = chatRequestSchema.safeParse(body);
     if (!validationResult.success) {
       const errorMsg = validationResult.error.errors
@@ -20,8 +19,6 @@ export async function POST(request: Request) {
     }
 
     const { message } = validationResult.data;
-
-    // Generate the answer using RAG pipeline
     const result = await generateAnswer(message);
 
     return NextResponse.json(result, { status: 200 });

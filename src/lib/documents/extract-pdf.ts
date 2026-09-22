@@ -8,8 +8,6 @@ import { cleanText } from './clean';
 export async function extractPdf(buffer: Buffer): Promise<ExtractedDocument> {
   try {
     const data = await pdf(buffer);
-    
-    // Sanitize and clean the extracted text
     const text = cleanText(data.text);
 
     return {

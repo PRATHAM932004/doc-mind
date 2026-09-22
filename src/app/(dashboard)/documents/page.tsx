@@ -30,7 +30,6 @@ export default function DocumentsPage() {
 
   return (
     <div className="flex flex-column gap-4">
-      {/* Page Title & Subtitle */}
       <div className="flex flex-column sm:flex-row sm:align-items-center sm:justify-content-between gap-2">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-900 m-0">
@@ -43,10 +42,8 @@ export default function DocumentsPage() {
         </div>
       </div>
 
-      {/* Ingestion Dropzone */}
       <FileUpload onUploadSuccess={fetchDocuments} />
 
-      {/* Document Records Data Table */}
       <DocTable
         documents={documents}
         loading={loading}

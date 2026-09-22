@@ -8,8 +8,6 @@ import { cleanText } from './clean';
 export async function extractDocx(buffer: Buffer): Promise<ExtractedDocument> {
   try {
     const result = await mammoth.extractRawText({ buffer });
-    
-    // Sanitize and clean the extracted text
     const text = cleanText(result.value);
 
     return {

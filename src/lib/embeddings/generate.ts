@@ -4,13 +4,11 @@ function getMockEmbedding(text: string): number[] {
   const vector = new Array(1536).fill(0);
   for (let i = 0; i < 1536; i++) {
     let sum = 0;
-    // Walk over characters to generate a deterministic pattern
     for (let j = 0; j < Math.min(text.length, 100); j++) {
       sum += text.charCodeAt(j) * Math.sin(i + j);
     }
     vector[i] = Math.sin(sum);
   }
-  // Normalize vector to unit length
   const magnitude = Math.sqrt(vector.reduce((acc, val) => acc + val * val, 0));
   return vector.map((val) => val / (magnitude || 1));
 }
@@ -33,7 +31,6 @@ export async function generateEmbedding(text: string): Promise<number[]> {
     const rawModelName = process.env.GEMINI_EMBEDDING_MODEL || 'gemini-embedding-001';
     const modelName = rawModelName.startsWith('models/') ? rawModelName : `models/${rawModelName}`;
 
-    // Normalize newlines to spaces for embedding
     const sanitizedText = text.replace(/\n/g, ' ');
     const response = await ai.models.embedContent({
       model: modelName,
@@ -51,8 +48,6 @@ export async function generateEmbedding(text: string): Promise<number[]> {
     return values;
   } catch (error: any) {
     console.error('Error in generateEmbedding service using Gemini:', error);
-    
-    // Automatically fall back to mock embedding to avoid breaking the E2E flow
     console.warn('[Embedding] Gemini Embedding API call failed. Falling back to mock generator.');
     return getMockEmbedding(text);
   }

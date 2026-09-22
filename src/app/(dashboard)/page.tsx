@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { formatDate } from "@/utils/date";
 
-export const revalidate = 0; // Disable caching to ensure fresh metrics
+export const revalidate = 0;
 
 function formatBytes(bytes: number, decimals = 2): string {
   if (bytes === 0) return "0 Bytes";
@@ -15,7 +15,6 @@ function formatBytes(bytes: number, decimals = 2): string {
 }
 
 export default async function DashboardPage() {
-  // Query database metrics directly
   const documents = await prisma.document.findMany({
     orderBy: { createdAt: "desc" },
   });
@@ -66,7 +65,6 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-column gap-4">
-      {/* Title & Quick Actions Block */}
       <div className="flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-3">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-900 m-0">
@@ -95,7 +93,6 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* KPI Cards Grid */}
       <div className="grid col-12 p-0 m-0 gap-3 md:gap-0">
         {stats.map((stat, i) => (
           <div key={i} className="col-12 sm:col-6 lg:col-3 p-2">
@@ -119,7 +116,6 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      {/* Recently Uploaded Documents Block */}
       <div className="docmind-card">
         <div className="flex align-items-center justify-content-between mb-4">
           <div>

@@ -15,10 +15,8 @@ export async function generateAnswer(
   const topK = options.topK ?? 5;
 
   try {
-    // 1. Retrieve similar chunks
     const similarChunks = await searchSimilarChunks(message, { topK });
 
-    // Helper to generate a helpful offline mock response
     const getOfflineResponse = () => {
       const sources: SourceCitation[] = similarChunks.map((chunk) => ({
         documentId: chunk.documentId,
@@ -55,10 +53,8 @@ ${topSnippet.trim()}
       return getOfflineResponse();
     }
 
-    // 2. Format chunks into context
     const context = buildRagContext(similarChunks);
 
-    // 3. Define the strict system prompt for prompt injection protection & behavior alignment
     const systemPrompt = `You are DocMind, an AI-powered company knowledge assistant.
 
 Answer questions using only the provided company documentation.
@@ -83,7 +79,6 @@ ${context}`;
       : `models/${rawModelName}`;
 
     try {
-      // 4. Generate answer using Google Generative AI (Gemini) SDK
       const response = await ai.models.generateContent({
         model: modelName,
         contents: message,
@@ -96,7 +91,6 @@ ${context}`;
         response.text ||
         "I couldn't find that information in the company documentation.";
 
-      // 5. Gather source citations
       const sources: SourceCitation[] = similarChunks.map((chunk) => ({
         documentId: chunk.documentId,
         documentName: chunk.documentName,

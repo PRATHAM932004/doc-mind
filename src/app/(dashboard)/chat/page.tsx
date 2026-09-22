@@ -31,14 +31,10 @@ export default function ChatPage() {
   const [documents, setDocuments] = useState<any[]>([]);
   const [loadingDocs, setLoadingDocs] = useState<boolean>(true);
   const [aiLoading, setAiLoading] = useState<boolean>(false);
-
-  // Dialog state for viewing chunk details
   const [sourceDetail, setSourceDetail] = useState<SourceCitation | null>(null);
   const [dialogVisible, setDialogVisible] = useState<boolean>(false);
-
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Initialize React Hook Form with Zod schema
   const {
     register,
     handleSubmit,
@@ -58,7 +54,6 @@ export default function ChatPage() {
       const response = await fetch("/api/documents");
       if (response.ok) {
         const data = await response.json();
-        // Only list COMPLETED status documents in active KB sidebar
         const activeFiles = (data.documents || []).filter(
           (d: any) => d.status === "COMPLETED",
         );
@@ -75,7 +70,6 @@ export default function ChatPage() {
     fetchActiveDocuments();
   }, []);
 
-  // Auto scroll to bottom of chat
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, aiLoading]);
@@ -84,14 +78,13 @@ export default function ChatPage() {
     const userMessage = data.message.trim();
     if (!userMessage) return;
 
-    // Add user message to state
     const userMsgId = Math.random().toString(36).substring(7);
     const updatedMessages = [
       ...messages,
       { id: userMsgId, role: "user" as const, content: userMessage },
     ];
     setMessages(updatedMessages);
-    reset(); // Reset form field
+    reset();
     setAiLoading(true);
 
     try {
@@ -107,7 +100,6 @@ export default function ChatPage() {
         throw new Error(result.error || "Failed to get response");
       }
 
-      // Add AI response to state
       const assistantMsgId = Math.random().toString(36).substring(7);
       setMessages([
         ...updatedMessages,
@@ -120,7 +112,6 @@ export default function ChatPage() {
       ]);
     } catch (err: any) {
       console.error("Chat error:", err);
-      // Add error response
       const errMsgId = Math.random().toString(36).substring(7);
       setMessages([
         ...updatedMessages,
@@ -155,21 +146,19 @@ export default function ChatPage() {
 
   return (
     <div className="flex flex-column h-full flex-1 min-h-0">
-      {/* Title */}
       <div className="mb-3 flex-shrink-0 flex align-items-center justify-content-between">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-900 m-0">
             Ask DocMind
           </h1>
           <p className="text-500 text-sm mt-1 mb-0">
-            Query your company documents using verified AI Retrieval-Augmented Generation.
+            Query your company documents using verified AI Retrieval-Augmented
+            Generation.
           </p>
         </div>
       </div>
 
-      {/* Grid container spanning full layout height */}
       <div className="grid flex-1 overflow-hidden m-0 p-0 gap-3 md:gap-0 min-h-0">
-        {/* Left Column: Knowledge Base Status */}
         <div className="col-12 md:col-4 lg:col-3 p-2 h-full flex flex-column min-h-0">
           <div className="docmind-card flex-1 flex flex-column overflow-hidden p-3">
             <div className="flex align-items-center justify-content-between pb-3 border-bottom-1 border-100">
@@ -191,7 +180,8 @@ export default function ChatPage() {
                 <div className="text-center py-5">
                   <i className="pi pi-folder-open text-400 text-3xl mb-2"></i>
                   <p className="text-500 text-xs m-0">
-                    No active documents. Upload files under &quot;Documents&quot; to start asking questions.
+                    No active documents. Upload files under
+                    &quot;Documents&quot; to start asking questions.
                   </p>
                 </div>
               ) : (
@@ -221,13 +211,9 @@ export default function ChatPage() {
           </div>
         </div>
 
-        {/* Right Column: Chat workspace */}
         <div className="col-12 md:col-8 lg:col-9 p-2 h-full flex flex-column min-h-0">
           <div className="docmind-card flex-1 flex flex-column overflow-hidden p-0">
-            {/* Scrollable messages area */}
-            <div
-              className="flex-1 overflow-y-auto p-4 flex flex-column gap-4 bg-surface-50"
-            >
+            <div className="flex-1 overflow-y-auto p-4 flex flex-column gap-4 bg-surface-50">
               {messages.map((msg) => (
                 <div
                   key={msg.id}
@@ -244,7 +230,6 @@ export default function ChatPage() {
                         : "bg-white dark:bg-gray-800 border-1 border-200 dark:border-gray-700 text-800 border-round-tl-none"
                     }`}
                   >
-                    {/* Role Header Indicator */}
                     <div className="flex align-items-center gap-2 mb-2 pb-1 border-bottom-1 border-200 dark:border-gray-700">
                       <i
                         className={`text-xs ${
@@ -264,7 +249,6 @@ export default function ChatPage() {
                       </span>
                     </div>
 
-                    {/* Content */}
                     {msg.role === "user" ? (
                       <div className="line-height-3 text-sm white-space-pre-wrap">
                         {msg.content}
@@ -273,13 +257,13 @@ export default function ChatPage() {
                       <MarkdownRenderer content={msg.content} />
                     )}
 
-                    {/* Sources citation list (Assistant only) */}
                     {msg.role === "assistant" &&
                       msg.sources &&
                       msg.sources.length > 0 && (
                         <div className="mt-3 pt-3 border-top-1 border-200 dark:border-gray-700">
                           <div className="text-xs text-500 font-bold mb-2 flex align-items-center gap-1 uppercase tracking-wider">
-                            <i className="pi pi-bookmark text-indigo-500"></i> Citations / Sources
+                            <i className="pi pi-bookmark text-indigo-500"></i>{" "}
+                            Citations / Sources
                           </div>
                           <div className="flex flex-wrap gap-2">
                             {msg.sources.map((source, sIdx) => (
@@ -306,7 +290,6 @@ export default function ChatPage() {
                 </div>
               ))}
 
-              {/* AI Thinking/Loading indicator */}
               {aiLoading && (
                 <div className="flex justify-content-start">
                   <div className="bg-white dark:bg-gray-800 border-1 border-200 dark:border-gray-700 text-800 border-round-xl border-round-tl-none p-3 shadow-1 max-w-20rem">
@@ -320,7 +303,6 @@ export default function ChatPage() {
                 </div>
               )}
 
-              {/* Quick suggestion prompts when conversation is just starting */}
               {messages.length <= 1 && !aiLoading && documents.length > 0 && (
                 <div className="mt-4 pt-3 border-top-1 border-200 dark:border-gray-700">
                   <span className="text-xs font-bold text-400 uppercase tracking-wider block mb-2">
@@ -345,7 +327,6 @@ export default function ChatPage() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input form panel */}
             <div className="p-3 border-top-1 border-200 dark:border-gray-800 bg-white dark:bg-gray-900">
               <form
                 onSubmit={handleSubmit(handleSendMessage)}
@@ -385,7 +366,6 @@ export default function ChatPage() {
         </div>
       </div>
 
-      {/* Source Citation Content Preview Dialog */}
       <Dialog
         header={
           <div className="flex align-items-center gap-2 text-indigo-600 dark:text-indigo-400">

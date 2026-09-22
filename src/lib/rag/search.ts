@@ -12,11 +12,9 @@ export async function searchSimilarChunks(
   const topK = options.topK ?? 5;
 
   try {
-    // Generate the embedding vector for the search query
     const queryEmbedding = await generateEmbedding(query);
     const embeddingStr = `[${queryEmbedding.join(',')}]`;
 
-    // Query DocumentChunks based on pgvector cosine similarity
     const results = await prisma.$queryRawUnsafe<SearchResult[]>(
       `SELECT
         dc.id,
